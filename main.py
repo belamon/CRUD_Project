@@ -390,10 +390,104 @@ def update_data_lead():
 
 
 
-def delete():
-    """Function for delete the data
-    """
-    return
+#Delete data function
+
+deleted_leads = []  # List to hold deleted leads
+
+def delete_data():
+    """Function to delete leads based on user input."""
+    
+    while True:
+        print("====DELETE DATA LEAD=====")
+        
+
+        # Show options to the user
+        print("\nOptions:")
+        print("1. Delete lead by email")
+        print("2. Restore deleted lead by email")
+        print("3. Show deleted leads")
+        print("4. Back to Main Menu")
+
+        user_input = input("Enter Choice: ")
+
+        if user_input == "1":  # Delete lead by email
+             # Show list of current leads before proceeding
+            show_list_of_leads()
+            #ask user to input email
+            email = input("Enter email of the lead to delete: ")
+            
+            # Find the lead with the matching email
+            lead_found = None
+            for lead in data_lead:
+                if lead['email'] == email:
+                    lead_found = lead  # Store the lead to delete
+                    break
+
+            if lead_found:  # If a matching lead was found
+                # Confirm deletion
+                user_confirmation = confirmation_page(action="delete", data=lead_found)
+                if user_confirmation == "1":  # Confirm deletion
+                    deleted_leads.append(lead_found)  # Move lead to deleted leads
+                    data_lead.remove(lead_found)  # Remove lead from active list
+                    print("\nLead successfully deleted.")
+                    show_list_of_leads_after_deleted()  # Show updated list of leads
+                elif user_confirmation == "2":  # Cancel deletion
+                    print("\nLead not deleted.")
+            else:
+                print("No lead found with the provided email.")
+
+        elif user_input == "2":  # Restore deleted lead by email
+            # Show list of deleted leads before proceeding
+            show_deleted_leads()
+            # Ask user to input email
+            email = input("Enter email of the lead to restore: ")
+            lead_to_restore = None
+            for lead in deleted_leads:
+                if lead['email'] == email:
+                    lead_to_restore = lead
+                    break
+
+            if lead_to_restore:  # If a matching deleted lead was found
+                data_lead.append(lead_to_restore)  # Restore the lead to active leads
+                deleted_leads.remove(lead_to_restore)  # Remove from deleted leads
+                print(f"Lead with email {email} restored successfully.")
+            else:
+                print("No deleted lead found with the provided email.")
+
+        elif user_input == "3":  # Show deleted leads
+            show_deleted_leads()
+
+        elif user_input == "4":  # Back to Main Menu
+            return  # Exit back to the main menu
+
+        else:
+            print("Invalid choice. Please enter 1, 2, 3, or 4.")
+
+def show_list_of_leads_after_deleted():
+    """Function to display only active leads (leads that are not deleted)."""
+    print("===== Active Data Leads =====")
+    for lead in data_lead:
+        details_of_leads([lead])  # Display details of active leads
+
+def show_deleted_leads():
+    """Function to display only deleted leads."""
+    if deleted_leads:
+        for lead in deleted_leads:
+            details_of_leads([lead])  # Display details of deleted leads
+    else:
+        print("No deleted leads available.")
+
+def confirmation_page(action, data):
+    """Mock function for user confirmation."""
+    print(f"Are you sure you want to {action} this lead?")
+    details_of_leads([data])
+    return input("Enter 1 to confirm, 2 to cancel: ")
+
+def details_of_leads(leads):
+    """Function to display details of leads."""
+    for lead in leads:
+        print(f"Lead ID: {lead['lead_id']}, Name: {lead['first_name']} {lead['last_name']}, Email: {lead['email']}")
+
 
 def login():
     while True:
@@ -556,6 +650,8 @@ while True:
                 create_data_lead()  # Ensure this function is defined
             elif menu_choice == 3:
                 update_data_lead()  # Ensure this function is defined
+            elif menu_choice == 4:
+                delete_data()  # Ensure this function is defined
 
 
         
