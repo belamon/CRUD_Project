@@ -773,6 +773,11 @@ while True:
                 transaction()
             elif menu_choice == 6:
                 report_menu(data_lead)
+            elif menu_choice == 7:
+                print("Exiting program, Goodbye!")
+                exit()  # Break the outer loop and exit the program
+            else:
+                print("Invalid choice. Please select a valid option.")
 
 
         
