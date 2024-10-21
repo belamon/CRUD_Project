@@ -29,6 +29,21 @@ valid_user = [
         'password': 'password123',
     }
 ]
+#this is list of sales representation 
+valid_sales_reps = ["Sabrina", "Mutiara", "Samantha"]
+
+#this is list of company sector 
+valid_sectors = ["Finance", "Technology", "Real Estate"]
+
+#this is list of lead source 
+valid_lead_sources = ["LinkedIn", "Facebook", "Instagram"]
+
+#This is list of map month 
+months_map = {
+        "january": "01", "february": "02", "march": "03", "april": "04",
+        "may": "05", "june": "06", "july": "07", "august": "08",
+        "september": "09", "october": "10", "november": "11", "december": "12"
+    }
 
 # /===== Feature Program =====/
 # Create your feature program here
@@ -488,6 +503,24 @@ def details_of_leads(leads):
     for lead in leads:
         print(f"Lead ID: {lead['lead_id']}, Name: {lead['first_name']} {lead['last_name']}, Email: {lead['email']}")
 
+#Transaction function
+def transaction():
+    """Function to perform transactions on the data."""
+    while True:
+        print("\n===== Transaction Menu =====")
+        print("1. Filter Month of Transaction")
+        print("2. Back to Main Menu")
+
+        choice = input("Enter your choice: ")
+
+        if choice == "1":
+            month = input("Enter the month name (e.g., 'January'): ").strip().lower()  # Convert to lowercase
+            filter_leads_by_month(month)
+        elif choice == "2":
+            break  # Exit back to the main menu
+        else:
+            print("Invalid choice. Please select a valid option.")
+
 
 def login():
     while True:
@@ -634,6 +667,33 @@ def confirmation_page(action, data):
             return user_input
         else:
             print("Invalid choice. Please enter 1 for Yes or 2 for No")
+def filter_leads_by_month(month):
+    """Function to filter and sum transactions for a given month."""
+    
+    # Normalize the input to lowercase to make it case-insensitive
+    month = month.lower()
+    
+    if month in months_map:
+        month_number = months_map[month]
+        total_transaction_value = 0
+        filtered_leads = []
+
+        # Loop through the leads data and filter by the given month
+        for lead in data_lead:
+            lead_date = lead["date_created"]
+            lead_month = lead_date.split("-")[1]  # Extract the month from the 'date_created' field
+            
+            if lead_month == month_number:
+                filtered_leads.append(lead)
+                total_transaction_value += lead.get("Transaction", 0)  # Use .get() to avoid KeyError
+
+        # Check if any leads were found
+        if filtered_leads:
+            print(f"Total transaction value in {month.capitalize()}: {total_transaction_value}")
+        else:
+            print(f"No leads found for {month.capitalize()}.")
+    else:
+        print("Invalid month name. Please enter a valid month.")
 
 
 # /===== Main Program =====/
@@ -652,6 +712,8 @@ while True:
                 update_data_lead()  # Ensure this function is defined
             elif menu_choice == 4:
                 delete_data()  # Ensure this function is defined
+            elif menu_choice == 5:
+                transaction()
 
 
         
