@@ -7,6 +7,10 @@
 
 # /************************************/
 import re
+from datetime import datetime
+import csv
+import pandas as pd
+from collections import defaultdict
 # /===== Data Model =====/
 # Create your data model here
 data_lead = [
@@ -520,7 +524,35 @@ def transaction():
             break  # Exit back to the main menu
         else:
             print("Invalid choice. Please select a valid option.")
+#report data function 
+def report_menu(data_leads):
+    while True:
+        print("\n==== Reporting Menu ====")
+        print("1. Generate Summary Report")
+        print("2. Export to CSV")
+        print("3. Export to Excel")
+        print("4. Back to Main Menu")
 
+        choice = input("Enter your choice: ")
+
+        if choice == "1":
+            report = generate_summary_report(data_leads)
+            print("============Summary Report:===========")
+            for sector, count in report.items():
+                print(f"{sector}: {count}")
+            input("Press enter  to continue...")
+        elif choice == "2":
+            filename = input("Enter filename for CSV export: ")
+            export_to_csv(data_leads, filename)
+            input("Press enter  to continue...")
+        elif choice == "3":
+            filename = input("Enter filename for Excel export: ")
+            export_to_excel(data_leads, filename)
+            input("Press enter  to continue...")
+        elif choice == "4":
+            break
+        else:
+            print("Invalid choice. Please enter 1, 2, 3, or 4.")
 
 def login():
     while True:
@@ -694,7 +726,32 @@ def filter_leads_by_month(month):
             print(f"No leads found for {month.capitalize()}.")
     else:
         print("Invalid month name. Please enter a valid month.")
+def generate_summary_report(data_leads):
+    """Generate a summary report of leads by company sector."""
+    report = defaultdict(int)  # Use defaultdict to avoid key errors
 
+    for lead in data_leads:
+        sector = lead['company_sector']
+        report[sector] += 1  # Increment the count for each sector
+
+    return report
+def export_to_csv(data_leads, filename):
+    """Export leads data to a CSV file."""
+    fieldnames = data_leads[0].keys()  # Extract column headers from the first dictionary
+
+    with open(f"{filename}.csv", mode='w', newline='') as file:
+        writer = csv.DictWriter(file, fieldnames=fieldnames)
+        writer.writeheader()  # Write the header row
+        writer.writerows(data_leads)  # Write all the rows of lead data
+
+    print(f"Data successfully exported to {filename}.csv")
+
+def export_to_excel(data_leads, filename):
+    """Export leads data to an Excel file using pandas."""
+    df = pd.DataFrame(data_leads)  # Convert the list of dictionaries to a pandas DataFrame
+    df.to_excel(f"{filename}.xlsx", index=False)  # Export to Excel without including the index
+
+    print(f"Data successfully exported to {filename}.xlsx")
 
 # /===== Main Program =====/
 # Create your main program here
@@ -714,6 +771,8 @@ while True:
                 delete_data()  # Ensure this function is defined
             elif menu_choice == 5:
                 transaction()
+            elif menu_choice == 6:
+                report_menu(data_lead)
 
 
         
