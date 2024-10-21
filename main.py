@@ -238,10 +238,157 @@ def create_data_lead():
             print("Invalid Input. Please enter the number between (1-2)")
 
 
-def update():
-    """Function for update the data
-    """
-    return
+#Update Data Leads Function 
+def update_data_lead():
+    """Function to display the result when the user inputs number 3 on the main menu."""
+    
+    while True:  # Outer loop for updating data leads
+        print("\t\t============UPDATE DATA LEADS====================")
+        print("1. Update Data Leads")
+        print("2. Back to Menu")
+
+        try:
+            operation = False
+            user_input = int(input("Please Choose an Option (1-2): "))
+
+            if user_input == 1:
+                print("===============Input Update Data of The Leads=====================")
+
+                while not operation:  # Inner loop for updating leads
+                    lead_email = input("Enter the email of the Lead you want to update: ")
+                    lead_found = False
+
+                    for lead in data_lead:
+                        if lead["email"] == lead_email:
+                            lead_found = True 
+
+                            details_of_leads([lead])  # Display lead details
+
+                            user_confirmation = confirmation_page(action="update", data=lead)  # Re-confirmation
+
+                            if user_confirmation == "1":  # Confirm update
+                                # Store original values for confirmation
+                                original_lead = lead.copy()  
+                                update_made = False  # Flag to track if an update has been made
+
+                                print("Choose column that you want to be updated")
+                                print("1. Lead ID ")
+                                print("2. First Name")
+                                print("3. Last Name")
+                                print("4. Email")
+                                print("5. Phone Number")
+                                print("6. Company Sector")
+                                print("7. Lead Source")
+                                print("8. Date Created")
+
+                                while True:
+                                    try:  # This is a block to get the column that user wants to update
+                                        column_choice = int(input("Please Choose an Option (1-8): "))
+                                        if column_choice == 1:
+                                            lead_id = int(input("Enter the new Lead ID (must be an integer): "))
+                                            lead["lead_id"] = lead_id
+                                            print(f"Lead ID updated to : {lead_id}")
+                                            update_made = True  # Update occurred
+                                            break 
+                                        elif column_choice == 2:
+                                            first_name = input("Enter the new First Name: ")
+                                            lead["first_name"] = first_name
+                                            print(f"First Name updated to : {first_name}")
+                                            update_made = True  # Update occurred
+                                            break 
+                                        elif column_choice == 3:
+                                            last_name = input("Enter the new Last Name: ")
+                                            lead["last_name"] = last_name
+                                            print(f"Last Name updated to : {last_name}")
+                                            update_made = True  # Update occurred
+                                            break
+                                        elif column_choice == 4:
+                                            email = input("Enter the new Email: ")
+                                            if validate_email(email):
+                                                lead["email"] = email
+                                                print(f"Email updated to : {email}")
+                                                update_made = True  # Update occurred
+                                                break
+                                            else:
+                                                print("Invalid email format. Please try again.")
+                                        elif column_choice == 5:
+                                            phone_number = input("Enter the new Phone Number: ")
+                                            if validate_phone_number(phone_number):
+                                                lead["phone_number"] = phone_number
+                                                print(f"Phone Number updated to : {phone_number}")
+                                                update_made = True  # Update occurred
+                                                break
+                                            else:
+                                                print("Invalid phone number. Please enter digits only (10-15 characters).")
+                                        elif column_choice == 6:
+                                            company_sector = input("Enter the new Company Sector: ")
+                                            if validate_sector(company_sector):
+                                                lead["company_sector"] = company_sector
+                                                print(f"Company Sector updated to : {company_sector}")
+                                                update_made = True  # Update occurred
+                                                break
+                                            else:
+                                                print(f"Invalid sector. Please choose from the following options: {', '.join(valid_sectors)}")  
+                                        elif column_choice == 7:
+                                            lead_source = input("Enter the new Lead Source: ")
+                                            if validate_source(lead_source):
+                                                lead["lead_source"] = lead_source
+                                                print(f"Lead Source updated to : {lead_source}")
+                                                update_made = True  # Update occurred
+                                                break
+                                            else:
+                                                print(f"Invalid source. Please choose from the following options: {', '.join(valid_lead_sources)}")
+                                        elif column_choice == 8:
+                                            date_created = input("Enter the new Date Created (YYYY-MM-DD): ")
+                                            if validate_date(date_created):
+                                                lead["date_created"] = date_created
+                                                print(f"Date Created updated to : {date_created}")
+                                                update_made = True  # Update occurred
+                                                break
+                                            else:
+                                                print("Invalid date format. Please use YYYY-MM-DD.")
+                                        else:
+                                            print("Invalid Option. Please choose a valid option (1-8).")
+                                    except ValueError:
+                                        print("Invalid Input. Please enter a valid number.")
+                                        continue
+
+                                # Ask for confirmation to save changes only if an update was made
+                                if update_made:
+                                    while True:  # Add a loop to keep asking for confirmation
+                                        save_confirmation = confirmation_page(action="save", data=lead)
+                                        if save_confirmation == "1":  # User confirms save
+                                            print("Changes saved successfully.")
+                                            operation = True
+                                            break  # Break out of the save confirmation loop
+                                        elif save_confirmation == "2":  # User cancels save
+                                            lead.update(original_lead)  # Revert to original values
+                                            print("Changes reverted.")
+                                            operation = True 
+                                            break  # Break out of the save confirmation loop
+                                        else:
+                                            print("Invalid Option. Please choose a valid option.")
+                                    
+                            elif user_confirmation == "2":
+                                print("Data update canceled.")
+                                break  # Exit the inner loop and go back to the outer loop
+
+                    if not lead_found:
+                        print("The data you are looking for does not exist.")
+
+                    # Check if we broke out of the inner loop due to cancellation
+                    if not lead_found or user_confirmation == "2":
+                        break  # Break the inner loop to go back to the outer menu
+
+            elif user_input == 2:
+                return  # Go back to the main menu
+            else:
+                print("Invalid choice. Please choose 1 or 2.")
+
+        except ValueError:
+            print("Invalid input. Please enter a number.")
+
+
 
 def delete():
     """Function for delete the data
@@ -407,6 +554,9 @@ while True:
                 show_data_leads()
             elif menu_choice == 2:
                 create_data_lead()  # Ensure this function is defined
+            elif menu_choice == 3:
+                update_data_lead()  # Ensure this function is defined
+
 
         
     else:
