@@ -663,42 +663,6 @@ def validate_sales(sales_rep):
     else:
         print("Sales representation is not listed")
         return False
-    
-def confirmation_page(action, data):
-    """Generates a confirmation message based on the specified action and data.
-    
-
-    Args:
-        action (str): The action being confirmed, either 'delete' or 'update'
-        -'delete' to confirm a delete operation 
-        -'update' to confirm an update operation 
-
-        data (str): A string representing the specific data (e.g. a record, ID, item)
-
-        Return: str: a formatted strin asking for confrmation to either delete or update the provided data. 
-        if the action is neither delete or update. it returns to none
-
-        example:
-        confirmation_page('delete', 'lead id 789')
-        #returns: are you sure you wan to delete the following data:?
-
-        example:
-        confirmation_page('update', 'lead id 789')
-        #returns: are you sure you wan to update the following data:?
-
-
-    """
-    while True:
-        print(f"Do you want to {action} this lead?")
-        print("1. Yes")
-        print("2. No")
-
-        user_input = input("Enter your choice (1-2):")
-
-        if user_input in ["1", "2"]:
-            return user_input
-        else:
-            print("Invalid choice. Please enter 1 for Yes or 2 for No")
 def filter_leads_by_month(month):
     """Function to filter and sum transactions for a given month."""
     
