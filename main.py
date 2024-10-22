@@ -71,9 +71,9 @@ def main_menu_choice():
             if 1 <= menu <= 7:  # check if input is valid between this range
                 return menu #return the selected menu option 
             else:
-                print("*************** Invalid choice. Please select a number between 1 and 5. ***************")
+                print("*************** Invalid choice. Please select a number between 1 and 7. ***************")
         except ValueError:
-            print("*********** Invalid input. Please enter a valid number between 1 and 5. ************")
+            print("*********** Invalid input. Please enter a valid number between 1 and 7. ************")
 
 #Read Menu Functon 
 def show_data_leads():
